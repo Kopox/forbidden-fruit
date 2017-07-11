@@ -17,13 +17,11 @@
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 
-var showingEndScreen = false;
 var showingLoseScreen = false;
 var time = 0;
 var minutes = 0;
 var seconds = 0;
 var score = 0;
-var maxScore = 15;
 var gravity = 0.25;
 var speedX = 0;
 var jump = 0;
@@ -96,7 +94,7 @@ window.onload = function() {
 		drawAll();
 		debug();
 		
-		if (showingEndScreen == false && showingLoseScreen == false) {
+		if (showingLoseScreen == false) {
 			time += 1;
 			minutes = Math.floor(time / (60 * 60));
 			seconds = Math.floor((time / 60) % 60);
@@ -145,11 +143,6 @@ function updatePosition() {
 
 // Draw the screen
 function drawAll() {
-	if (showingEndScreen) {
-		drawEndScreen()
-		return;
-	}
-	
 	if (showingLoseScreen) {
 		drawLoseScreen()
 		return;
@@ -163,7 +156,8 @@ function drawAll() {
 function drawBackground() {
 	colorRect(0, 0, canvas.width, canvas.height, "gainsboro"); // Background
 	writeText("Score: " + score, 50, 50, "left", "black"); // Score
-	writeText("Grab " + maxScore + " forbidden fruits as fast as possible!", canvas.width/2, 50, "center", "black"); // Objective
+	writeText("Grab all the forbidden fruits as fast as possible!", 
+	canvas.width/2, 50, "center", "black"); // Objective
 	writeTime();
 
 	for(i = 0; i < blocks.length; i++) { // Draws all blocks
@@ -189,8 +183,7 @@ function drawLaure() {
 function keyDown(evt) {
 	switch(evt.keyCode) {
 		case 13:
-			if (showingEndScreen || showingLoseScreen) {
-				showingEndScreen = false;
+			if (showingLoseScreen) {
 				showingLoseScreen = false;
 				reset();
 			}
@@ -327,21 +320,14 @@ function isFruit() {
 	(laureWidth + fruitWidth)/2) {
 		score += 1;
 		initialPos();
-		if (score >= maxScore) {
-			showingEndScreen = true;
-		}
 	}
 	
-	if (showingEndScreen == false && // Check if laure crossed the fruit
-	((laurePosXPrev < fruitCenterX && laurePosX > fruitCenterX) ||
+	if (((laurePosXPrev < fruitCenterX && laurePosX > fruitCenterX) || // Check if laure crossed the fruit
 	(laurePosXPrev > fruitCenterX && laurePosX < fruitCenterX)) &&
 	Math.abs(laurePosYPrev - fruitCenterY) < laureHeight/2 &&
 	Math.abs(laurePosY - fruitCenterY) < laureHeight/2) {
 		score += 1;
 		initialPos();
-		if (score >= maxScore) {
-			showingEndScreen = true;
-		}
 	}
 }
 
@@ -350,7 +336,6 @@ function isBonusSpeed() {
 	if (Math.getDistance(laureCenterX, laureCenterY, bonusSpeedCenterX, bonusSpeedCenterY) <
 	(laureWidth + bonusSpeedWidth)/2) {
 		speedX += 4;
-		console.log(speedX);
 		presenceBonusSpeed = false;
 	}
 	
@@ -359,7 +344,6 @@ function isBonusSpeed() {
 	Math.abs(laurePosYPrev - bonusSpeedCenterY) < laureHeight/2 &&
 	Math.abs(laurePosY - bonusSpeedCenterY) < laureHeight/2) {
 		speedX += 4;
-		console.log(speedX);
 		presenceBonusSpeed = false;
 	}
 }
@@ -369,7 +353,6 @@ function isBonusJump() {
 	if (Math.getDistance(laureCenterX, laureCenterY, bonusJumpCenterX, bonusJumpCenterY) <
 	(laureWidth + bonusJumpWidth)/2) {
 		jump += 4;
-		console.log(jump);
 		presenceBonusJump = false;
 	}
 	
@@ -378,40 +361,59 @@ function isBonusJump() {
 	Math.abs(laurePosYPrev - bonusJumpCenterY) < laureHeight/2 &&
 	Math.abs(laurePosY - bonusJumpCenterY) < laureHeight/2) {
 		jump += 4;
-		console.log(jump);
 		presenceBonusJump = false;
-	}
-}
-
-// Draw end screen
-function drawEndScreen() {
-	colorRect(canvas.width/2 - 200, canvas.height/4, 400, 185, "black");
-	writeText("Press enter to reset.", canvas.width/2, canvas.height/4 + 130,
-	"center", "white");
-	
-	if ((minutes >= 1 && seconds > 30) || minutes >= 2) {
-		writeText("You got them all in " + minutes + " minutes and " +
-		seconds + " seconds.", canvas.width/2, canvas.height/4 + 75,
-		"center", "white");
-		writeText("There is no congratulation because you were too slow.", canvas.width/2, canvas.height/4 + 100,
-		"center", "white");
-	}
-	
-	if ((minutes <= 1 && seconds <= 30) || minutes < 1) {
-		writeText("Congratulations! You got them all in " + minutes + " minutes and " +
-		seconds + " seconds!", canvas.width/2, canvas.height/4 + 75,
-		"center", "white");
 	}
 }
 
 // Draw lose screen
 function drawLoseScreen() {
 	colorRect(canvas.width/2 - 200, canvas.height/4, 400, 185, "black");
-	writeText("Congratulations! You jumped into the abyss in " + minutes + " minutes and " +
-	seconds + " seconds!", canvas.width/2, canvas.height/4 + 75,
-	"center", "white");
+	writeText("You grabbed " + score + " forbidden fruits in " + 
+	minutes + " minutes and " +	seconds + " seconds!", 
+	canvas.width/2, canvas.height/4 + 75, "center", "white");
 	writeText("Press enter to reset.", canvas.width/2, canvas.height/4 + 130,
 	"center", "white");
+	
+	if (score == 0) {
+		writeText("You did not find you true purpose yet, I guess.", 
+		canvas.width/2, canvas.height/4 + 100, "center", "white");
+	} else if (score == 1) {
+		writeText("One forbidden fruits? It's not supposed to happen.", 
+		canvas.width/2, canvas.height/4 + 100, "center", "white");
+	} else if (score <= 3) {
+		writeText("Ramsay Bolton did this score.", 
+		canvas.width/2, canvas.height/4 + 100, "center", "white");
+	} else if (score <= 5) {
+		writeText("It's terrible... What are you? Left handed?", 
+		canvas.width/2, canvas.height/4 + 100, "center", "white");
+	} else if (score <= 7) {
+		writeText("Yeah! That's quite reasonable for a first try!", 
+		canvas.width/2, canvas.height/4 + 100, "center", "white");
+	} else if (score <= 9) {
+		writeText("Wow, you almost have a decent score!", 
+		canvas.width/2, canvas.height/4 + 100, "center", "white");
+	} else if (score = 10) {
+		writeText("That's a decent score.", 
+		canvas.width/2, canvas.height/4 + 100, "center", "white");
+	} else if (score = 11) {
+		writeText("That's a little bit more than a decent score!", 
+		canvas.width/2, canvas.height/4 + 100, "center", "white");
+	} else if (score = 12) {
+		writeText("Congratulations! You're a real fruit eater, buddy!", 
+		canvas.width/2, canvas.height/4 + 100, "center", "white");
+	} else if (score = 13) {
+		writeText("You're getting good!", 
+		canvas.width/2, canvas.height/4 + 100, "center", "white");
+	} else if (score = 14) {
+		writeText("You're getting pretty good!", 
+		canvas.width/2, canvas.height/4 + 100, "center", "white");
+	} else if (score = 15) {
+		writeText("You're awesome, aren't you?", 
+		canvas.width/2, canvas.height/4 + 100, "center", "white");
+	} else if (score > 15) {
+		writeText("I'm proud of you, there's nothing more to say.", 
+		canvas.width/2, canvas.height/4 + 100, "center", "white");
+	}
 }
 
 // Math
@@ -518,12 +520,7 @@ function generateBlocks() {
 		bonusJumpCenterY = bonusJumpPosY + bonusJumpHeight/2;
 	} else {
 		presenceBonusJump = false;
-
 	}
-	
-	console.log(bonus);
-	console.log(presenceBonusSpeed);
-	console.log(presenceBonusJump);
 }
 
 // Initialisation
@@ -548,7 +545,6 @@ function reset() {
 	bonusSpeedCount = 0;
 	speedX = initialSpeedX;
 	jump = initialJump;
-	showingEndScreen = false; // Useless?
 	initialPos();
 }
 
