@@ -10,5 +10,554 @@
 <br>
 <br>
 <button onclick="reset()">Reset</button>
-  </body>
+
+<script>
+
+
+var canvas = document.getElementById("canvas");
+var ctx = canvas.getContext("2d");
+
+var showingEndScreen = false;
+var showingLoseScreen = false;
+var time = 0;
+var minutes = 0;
+var seconds = 0;
+var score = 0;
+var maxScore = 10;
+var gravity = 0.25;
+var speedX = 0;
+var jump = 0;
+var initialSpeedX = 3;
+var initialJump = 8;
+
+var blocks = [];
+var numberOfBlocks = 35;
+var floor = new block(100, canvas.height - 50, 400, 200, "grey");
+
+var fruit = 0;
+var fruitPosX = 0;
+var fruitPosY = 0;
+var fruitWidth = 6;
+var fruitHeight = 6;
+var fruitCenterX = 0;
+var fruitCenterY = 0;
+var fruitColor = "orange";
+
+var bonus = 0;
+
+var presenceBonusSpeed = false;
+var bonusSpeedPosX = 0;
+var bonusSpeedPosY = 0;
+var bonusSpeedWidth = 6;
+var bonusSpeedHeight = 6;
+var bonusSpeedCenterX = 0;
+var bonusSpeedCenterY = 0;
+var bonusSpeedColor = "red";
+var bonusSpeedCount = 0;
+
+var presenceBonusJump = false;
+var bonusJumpPosX = 0;
+var bonusJumpPosY = 0;
+var bonusJumpWidth = 6;
+var bonusJumpHeight = 6;
+var bonusJumpCenterX = 0;
+var bonusJumpCenterY = 0;
+var bonusJumpColor = "green";
+var bonusJumpCount = 0;
+
+var laurePosX = 300;
+var laurePosXPrev = 300;
+var laurePosY = 475;
+var laurePosYPrev = 475;
+var laureWidth = 10;
+var laureHeight = 10;
+var laureCenterX = 0;
+var laureCenterY = 0;
+var laureColor = "blue";
+var laureSpeedX = 0;
+var laureSpeedY = 0;
+
+var holdLeft = false;
+var holdRight = false;
+var contactBot = false;
+var contactTop = false;
+var contactSide = false;
+
+
+window.onload = function() {
+	reset();
+
+	document.addEventListener("keydown", keyDown);
+	document.addEventListener("keyup", keyUp);
+
+	var framePerSecond = 60;
+	setInterval(function() {
+		updatePosition();
+		drawAll();
+		debug();
+		
+		if (showingEndScreen == false && showingLoseScreen == false) {
+			time += 1;
+			minutes = Math.floor(time / (60 * 60));
+			seconds = Math.floor((time / 60) % 60);
+		}
+	}, 1000/framePerSecond);
+}
+
+// Update the position of the elements
+function updatePosition() {
+	laurePosXPrev = laurePosX;
+	laurePosYPrev = laurePosY;
+	
+	laureSpeedX = 0;
+	if (holdLeft) {
+		laureSpeedX = -speedX;
+	} else if (holdRight) {
+		laureSpeedX = speedX;
+	}
+
+	laurePosX += laureSpeedX;
+	laurePosY += laureSpeedY;
+
+	isContactSide();
+	isContactBot();
+	isContactTop();
+	
+	laureCenterX = laurePosX + laureWidth/2;
+	laureCenterY = laurePosY + laureHeight/2;
+	
+	if (presenceBonusSpeed == true) {
+		isBonusSpeed();
+	}
+	
+	if (presenceBonusJump == true) {
+		isBonusJump();
+	}
+	
+	if (presenceBonusSpeed == false && presenceBonusJump == false) {
+		isFruit();
+	}
+	
+	if (laurePosY > 800) {
+		showingLoseScreen = true;
+	}
+}
+
+// Draw the screen
+function drawAll() {
+	if (showingEndScreen) {
+		drawEndScreen()
+		return;
+	}
+	
+	if (showingLoseScreen) {
+		drawLoseScreen()
+		return;
+	}
+	
+	drawBackground();
+	drawLaure();
+}
+
+// Draw elements
+function drawBackground() {
+	colorRect(0, 0, canvas.width, canvas.height, "gainsboro"); // Background
+	writeText("Score: " + score, 50, 50, "left", "black"); // Score
+	writeText("Grab " + maxScore + " forbidden fruits as fast as possible!", canvas.width/2, 50, "center", "black"); // Objective
+	writeTime();
+
+	for(i = 0; i < blocks.length; i++) { // Draws all blocks
+		blocks[i].draw();
+	}
+	
+	colorRect(fruitPosX, fruitPosY, fruitWidth, fruitHeight, fruitColor); // Draws the fruit
+	
+	if (presenceBonusSpeed == true) {
+		colorRect(bonusSpeedPosX, bonusSpeedPosY, bonusSpeedWidth, bonusSpeedHeight, bonusSpeedColor);
+	}
+	
+	if (presenceBonusJump == true) {
+		colorRect(bonusJumpPosX, bonusJumpPosY, bonusJumpWidth, bonusJumpHeight, bonusJumpColor);
+	}
+}
+
+function drawLaure() {
+	colorRect(laurePosX, laurePosY, laureWidth, laureHeight, laureColor)
+}
+
+// Arrow keys
+function keyDown(evt) {
+	switch(evt.keyCode) {
+		case 13:
+			if (showingEndScreen || showingLoseScreen) {
+				showingEndScreen = false;
+				showingLoseScreen = false;
+				reset();
+			}
+			break
+		case 37:
+			holdLeft = true;
+			break;
+		case 38:
+			if(contactBot) {
+				laureSpeedY = -jump;
+			}
+			break
+		case 39:
+			holdRight = true;
+			break
+	}
+}
+
+function keyUp(evt) {
+	switch(evt.keyCode) {
+		case 37:
+			holdLeft = false;
+			break;
+		case 39:
+			holdRight = false;
+			break
+	}
+}
+
+// Check if laure is on ground
+function isContactBot() {
+	contactBot = false;
+	for (i = 0; i < blocks.length; i++) { // Check if bottom left corner of laure is on ground
+		if (laurePosYPrev < blocks[i].posY &&
+		laurePosY + laureHeight >= blocks[i].posY &&
+		laurePosX > blocks[i].posX && 
+		laurePosX < blocks[i].posX + blocks[i].width) {
+			contactBot = true;
+			laurePosY = blocks[i].posY - laureHeight;
+		}
+	}
+	for (i = 0; i < blocks.length; i++) { // Check if bottom right corner of laure is on ground
+		if (laurePosYPrev < blocks[i].posY &&
+		laurePosY + laureHeight >= blocks[i].posY &&
+		laurePosX + laureWidth > blocks[i].posX && 
+		laurePosX + laureWidth < blocks[i].posX + blocks[i].width) {
+			contactBot = true;
+			laurePosY = blocks[i].posY - laureHeight;
+		}
+	}
+	if(contactBot) {
+		laureSpeedY = 0;
+	} else {
+		laureSpeedY += gravity;
+	}
+}
+
+// Check if the top of laure's head touches a block from the botton
+function isContactTop() {
+	contactTop = false;
+	for (i = 0; i < blocks.length; i++) { // Check if top right corner touches the bottom of a block
+		if (laurePosYPrev >= blocks[i].posY + blocks[i].height &&
+		laurePosY < blocks[i].posY + blocks[i].height &&
+		laurePosX + laureWidth > blocks[i].posX && 
+		laurePosX + laureWidth < blocks[i].posX + blocks[i].width) {
+			contactTop = true;
+			laurePosY = blocks[i].posY + blocks[i].height;
+			laureSpeedY = 0;
+		}
+	}
+	for (i = 0; i < blocks.length; i++) { // Check if top left corner touches the bottom of a block
+		if (laurePosYPrev >= blocks[i].posY + blocks[i].height &&
+		laurePosY < blocks[i].posY + blocks[i].height &&
+		laurePosX > blocks[i].posX && laurePosX < blocks[i].posX + blocks[i].width) {
+			contactTop = true;
+			laurePosY = blocks[i].posY + blocks[i].height;
+			laureSpeedY = 0;
+		}
+	}
+}
+
+// Check if a side of laure touches a side of a block
+function isContactSide() {
+	contactSide = false;
+	for (i = 0; i < blocks.length; i++) { // Check if bottom left corner of laure touches the right side of block
+		if (laurePosXPrev >= blocks[i].posX + blocks[i].width &&
+		laurePosY + laureHeight > blocks[i].posY && 
+		laurePosY + laureHeight < blocks[i].posY + blocks[i].height &&
+		laurePosX <= blocks[i].posX + blocks[i].width && 
+		laurePosX > blocks[i].posX) {
+			contactSide = true;
+			laurePosX = blocks[i].posX + blocks[i].width;
+			laureSpeedX = 0;
+		}
+	}
+	for (i = 0; i < blocks.length; i++) { // Check if bottom right corner of laure touches the left side of block
+		if (laurePosXPrev + laureWidth <= blocks[i].posX &&
+		laurePosY + laureHeight > blocks[i].posY && 
+		laurePosY + laureHeight < blocks[i].posY + blocks[i].height &&
+		laurePosX + laureWidth >= blocks[i].posX && 
+		laurePosX + laureWidth < blocks[i].posX + blocks[i].width) {
+			contactSide = true;
+			laurePosX = blocks[i].posX - laureWidth;
+			laureSpeedX = 0;
+		}
+	}
+	for (i = 0; i < blocks.length; i++) { // Check if top left corner of laure touches the right side of block
+		if (laurePosXPrev >= blocks[i].posX + blocks[i].width &&
+		laurePosY > blocks[i].posY && 
+		laurePosY < blocks[i].posY + blocks[i].height &&
+		laurePosX <= blocks[i].posX + blocks[i].width && 
+		laurePosX > blocks[i].posX) {
+			contactSide = true;
+			laurePosX = blocks[i].posX + blocks[i].width;
+			laureSpeedX = 0;
+		}
+	}
+	for (i = 0; i < blocks.length; i++) { // Check if top right corner of laure touches the left side of block
+		if (laurePosXPrev + laureWidth <= blocks[i].posX &&
+		laurePosY > blocks[i].posY && 
+		laurePosY < blocks[i].posY + blocks[i].height &&
+		laurePosX + laureWidth >= blocks[i].posX && 
+		laurePosX + laureWidth < blocks[i].posX + blocks[i].width) {
+			contactSide = true;
+			laurePosX = blocks[i].posX - laureWidth;
+			laureSpeedX = 0;
+		}
+	}
+}
+
+// Check is laure touches the fruit
+function isFruit() {
+	if (Math.getDistance(laureCenterX, laureCenterY, fruitCenterX, fruitCenterY) <
+	(laureWidth + fruitWidth)/2) {
+		score += 1;
+		initialPos();
+		if (score >= maxScore) {
+			showingEndScreen = true;
+		}
+	}
+	
+	if (showingEndScreen == false && // Check if laure crossed the fruit
+	((laurePosXPrev < fruitCenterX && laurePosX > fruitCenterX) ||
+	(laurePosXPrev > fruitCenterX && laurePosX < fruitCenterX)) &&
+	Math.abs(laurePosYPrev - fruitCenterY) < laureHeight/2 &&
+	Math.abs(laurePosY - fruitCenterY) < laureHeight/2) {
+		score += 1;
+		initialPos();
+		if (score >= maxScore) {
+			showingEndScreen = true;
+		}
+	}
+}
+
+// Check is laure touches the bonus speed
+function isBonusSpeed() {
+	if (Math.getDistance(laureCenterX, laureCenterY, bonusSpeedCenterX, bonusSpeedCenterY) <
+	(laureWidth + bonusSpeedWidth)/2) {
+		speedX += 4;
+		console.log(speedX);
+		presenceBonusSpeed = false;
+	}
+	
+	if (((laurePosXPrev < bonusSpeedCenterX && laurePosX > bonusSpeedCenterX) ||
+	(laurePosXPrev > bonusSpeedCenterX && laurePosX < bonusSpeedCenterX)) &&
+	Math.abs(laurePosYPrev - bonusSpeedCenterY) < laureHeight/2 &&
+	Math.abs(laurePosY - bonusSpeedCenterY) < laureHeight/2) {
+		speedX += 4;
+		console.log(speedX);
+		presenceBonusSpeed = false;
+	}
+}
+
+// Check is laure touches the bonus jump
+function isBonusJump() {
+	if (Math.getDistance(laureCenterX, laureCenterY, bonusJumpCenterX, bonusJumpCenterY) <
+	(laureWidth + bonusJumpWidth)/2) {
+		jump += 4;
+		console.log(jump);
+		presenceBonusJump = false;
+	}
+	
+	if (((laurePosXPrev < bonusJumpCenterX && laurePosX > bonusJumpCenterX) ||
+	(laurePosXPrev > bonusJumpCenterX && laurePosX < bonusJumpCenterX)) &&
+	Math.abs(laurePosYPrev - bonusJumpCenterY) < laureHeight/2 &&
+	Math.abs(laurePosY - bonusJumpCenterY) < laureHeight/2) {
+		jump += 4;
+		console.log(jump);
+		presenceBonusJump = false;
+	}
+}
+
+// Draw end screen
+function drawEndScreen() {
+	colorRect(canvas.width/2 - 200, canvas.height/4, 400, 185, "black");
+	writeText("Press enter to reset.", canvas.width/2, canvas.height/4 + 130,
+	"center", "white");
+	
+	if ((minutes >= 1 && seconds > 30) || minutes >= 2) {
+		writeText("You got them all in " + minutes + " minutes and " +
+		seconds + " seconds.", canvas.width/2, canvas.height/4 + 75,
+		"center", "white");
+		writeText("There is no congratulation because you were too slow.", canvas.width/2, canvas.height/4 + 100,
+		"center", "white");
+	}
+	
+	if ((minutes <= 1 && seconds <= 30) || minutes < 1) {
+		writeText("Congratulations! You got them all in " + minutes + " minutes and " +
+		seconds + " seconds!", canvas.width/2, canvas.height/4 + 75,
+		"center", "white");
+	}
+}
+
+// Draw lose screen
+function drawLoseScreen() {
+	colorRect(canvas.width/2 - 200, canvas.height/4, 400, 185, "black");
+	writeText("Congratulations! You jumped into the abyss in " + minutes + " minutes and " +
+	seconds + " seconds!", canvas.width/2, canvas.height/4 + 75,
+	"center", "white");
+	writeText("Press enter to reset.", canvas.width/2, canvas.height/4 + 130,
+	"center", "white");
+}
+
+// Math
+Math.getDistance = function(x1, y1, x2, y2) {
+	var xs = x2 - x1;
+	var ys = y2 - y1;
+	xs *= xs;
+	ys *= ys;
+	return Math.sqrt(xs + ys);
+}
+
+// Graphism
+function colorRect(posX, posY, width, height, drawColor) {
+	ctx.fillStyle = drawColor;
+	ctx.fillRect(posX, posY, width, height);
+}
+
+function writeText(text, posX, posY, align, textColor) {
+	ctx.fillStyle = textColor;
+	ctx.textAlign = align;
+	ctx.fillText(text, posX, posY)
+}
+
+// Write time
+function writeTime() {
+	var minutesString = minutes;
+	var secondsString = seconds;
+	
+	if(minutes < 10) {
+		minutesString = "0" + minutes;
+	}
+	if(seconds < 10) {
+		secondsString = "0" + seconds;
+	}
+	
+	writeText(minutesString + ":" + secondsString, canvas.width - 50, 50, "right", "black"); // Timer
+}
+
+// Block object
+function block(posX, posY, width, height, color) {
+	this.posX = posX;
+	this.posY = posY;
+	this.width = width;
+	this.height = height;
+	this.color = color;
+	this.draw = function() {
+		colorRect(this.posX, this.posY, this.width, this.height, this.color);
+	}
+}
+
+// Generation of the blocks positions and sizes + bonus
+function generateBlocks() {	
+	for (i = 1; i < numberOfBlocks; i++) {
+		blocks[i] = new block(Math.random()*canvas.width*0.9,
+			Math.floor(Math.random()*canvas.height*0.7/25)*25 + 100,
+			Math.random()*125 + 25,
+			10,
+			"grey");
+	}
+
+	do {
+		fruit = Math.floor(Math.random() * numberOfBlocks)
+	}
+	while (fruit < 1);
+	fruitPosX = blocks[fruit].posX + blocks[fruit].width/2 - fruitWidth/2;
+	fruitPosY = blocks[fruit].posY - 12
+	fruitCenterX = fruitPosX + fruitWidth/2;
+	fruitCenterY = fruitPosY + fruitHeight/2;
+	
+	do {
+		bonus = Math.floor(Math.random() * numberOfBlocks)
+	}
+	while (bonus < 1 || bonus == fruit);
+	
+	if (score == 0) {
+		bonus = undefined;
+	}
+	
+	if (bonusSpeedCount > 2 * bonusJumpCount) {
+		bonus = 3
+	}
+	if (bonusJumpCount > 2 * bonusSpeedCount) {
+		bonus = 4
+	}
+	
+	if (bonus % 2 == 0) {
+		presenceBonusSpeed = true;
+		bonusSpeedCount += 1;
+		bonusSpeedPosX = blocks[bonus].posX + blocks[bonus].width/2 - bonusSpeedWidth/2;
+		bonusSpeedPosY = blocks[bonus].posY - 12
+		bonusSpeedCenterX = bonusSpeedPosX + bonusSpeedWidth/2;
+		bonusSpeedCenterY = bonusSpeedPosY + bonusSpeedHeight/2;
+	} else {
+		presenceBonusSpeed = false;
+	}
+	
+
+	if ((bonus + 1) % 2 == 0) {
+		presenceBonusJump = true;
+		bonusJumpCount += 1;
+		bonusJumpPosX = blocks[bonus].posX + blocks[bonus].width/2 - bonusJumpWidth/2;
+		bonusJumpPosY = blocks[bonus].posY - 12
+		bonusJumpCenterX = bonusJumpPosX + bonusJumpWidth/2;
+		bonusJumpCenterY = bonusJumpPosY + bonusJumpHeight/2;
+	} else {
+		presenceBonusJump = false;
+
+	}
+	
+	console.log(bonus);
+	console.log(presenceBonusSpeed);
+	console.log(presenceBonusJump);
+}
+
+// Initialisation
+function initialPos() {
+	laurePosX = 300 - laureWidth/2;
+	laurePosXPrev = 300;
+	laurePosY = 475;
+	laurePosYPrev = 475;
+	laureSpeedX = 0;
+	laureSpeedY = 0;
+
+	blocks[0] = floor;
+	
+	generateBlocks();
+}
+
+// Reset
+function reset() {
+	time = 0;
+	score = 0;
+	bonusJumpCount = 0;
+	bonusSpeedCount = 0;
+	speedX = initialSpeedX;
+	jump = initialJump;
+	showingEndScreen = false; // Useless?
+	initialPos();
+}
+
+// Just a function to debug
+function debug() {
+}
+
+</script>
+
+
+</body>
 </html>
