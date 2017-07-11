@@ -374,13 +374,13 @@ function drawLoseScreen() {
 	writeText("Press enter to reset.", canvas.width/2, canvas.height/4 + 130,
 	"center", "white");
 	
-	if (score == 0) {
-		writeText("You did not find you true purpose yet, I guess.", 
+	if (score == 0) { // Could be improved with a switch
+		writeText("You did not find you true purpose yet.", 
 		canvas.width/2, canvas.height/4 + 100, "center", "white");
-	} else if (score == 1) {
-		writeText("One forbidden fruits? It's not supposed to happen.", 
+	} else if (score <= 2) {
+		writeText("I don't know what to tell you... Try again?", 
 		canvas.width/2, canvas.height/4 + 100, "center", "white");
-	} else if (score <= 3) {
+	} else if (score = 3) {
 		writeText("Ramsay Bolton did this score.", 
 		canvas.width/2, canvas.height/4 + 100, "center", "white");
 	} else if (score <= 5) {
