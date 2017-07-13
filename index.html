@@ -211,6 +211,10 @@ window.onload = function() {
 // Functions called by the onload function --------------------------------------------------------
 // Update the position of the elements
 function updatePosition() {
+	if (showingLoseScreen == true && scoreRegistered == true) {
+		return;
+	}
+	
 	laurePosXPrev = laurePosX;
 	laurePosYPrev = laurePosY;
 	
