@@ -203,7 +203,7 @@ window.onload = function() {
 			minutes = Math.floor(time / (60 * 60));
 			seconds = Math.floor((time / 60) % 60);
 			miliseconds = Math.floor((time % 60)*100/60);
-			if (time % 60 == 0) {
+			if (time % (60 * 5) == 0) {
 				highScoreUpdate();
 			}
 		}
