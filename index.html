@@ -8,7 +8,7 @@
 <body>
 <canvas id="canvas" width="800" height="600" style="background-color:gainsboro"></canvas>
 <br><br>
-Name: <input type="text" id="inputUser" value="Unknown"> <button onclick="changeUser()">Ok</button>
+User: <input type="text" id="inputUser" maxlength="200" value="Unknown"> <button onclick="changeUser()">Ok</button>
 <br>
 <h1>High scores</h1>
 <table>
@@ -180,6 +180,11 @@ window.onload = function() {
 	if (user == null || user == "") {
 		user = "Unknown";
 	}
+	if (user.length > 200) {
+		user = "Unknown";
+		window.alert("Your name was too long, it was set to Unknown. You can enter another name in the box below.");
+	}
+	
 	document.getElementById("inputUser").value = user;
 	
 	document.addEventListener("keydown", keyDown);
