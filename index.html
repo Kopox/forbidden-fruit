@@ -86,7 +86,7 @@ User: <input type="text" id="inputUser" maxlength="200" value="Unknown"> <button
 <script src="https://www.gstatic.com/firebasejs/4.1.3/firebase.js"></script>
 <script>
 // Version
-console.log("version 0.1");
+console.log("version 0.11");
 // High scores block ------------------------------------------------------------------------------
 // Initialize Firebase
 var config = {
@@ -177,7 +177,9 @@ var contactSide = false;
 // Onload function --------------------------------------------------------------------------------
 window.onload = function() {
 	newScore(user, score, minutes, seconds, miliseconds); // initial request needed, does nothing else
-	reset();
+	reset(); // initialization of variables etc.
+	
+	// Determination of user name
 	user = prompt("What's your name?");
 	if (user == null || user == "") {
 		user = "Unknown";
@@ -186,12 +188,13 @@ window.onload = function() {
 		user = "Unknown";
 		window.alert("Your name was too long, it was set to Unknown. You can enter another name in the box below.");
 	}
-	
 	document.getElementById("inputUser").value = user;
 	
+	// Event listeners
 	document.addEventListener("keydown", keyDown);
 	document.addEventListener("keyup", keyUp);
-	
+
+	// Main function repeated at each frame
 	var framePerSecond = 60;
 	setInterval(function() {
 		updatePosition();
@@ -249,6 +252,7 @@ function updatePosition() {
 		isFruit();
 	}
 	
+	// Check is laure jumped into the abyss
 	if (laurePosY > 800) {
 		showingLoseScreen = true;
 		if (scoreRegistered == false) {
@@ -274,19 +278,21 @@ function drawBackground() {
 	colorRect(0, 0, canvas.width, canvas.height, "gainsboro"); // Background
 	writeText("Score: " + score, 50, 50, "left", "black"); // Score
 	writeText("Grab all the forbidden fruits!", 
-	canvas.width/2, 50, "center", "black"); // Objective
-	writeTime();
+		canvas.width/2, 50, "center", "black"); // Objective
+	writeTime(); // Time
 
-	for(i = 0; i < blocks.length; i++) { // Draws all blocks
+	// Draws all blocks
+	for(i = 0; i < blocks.length; i++) {
 		blocks[i].draw();
 	}
 	
-	colorRect(fruitPosX, fruitPosY, fruitWidth, fruitHeight, fruitColor); // Draws the fruit
+	// Draw the fruit
+	colorRect(fruitPosX, fruitPosY, fruitWidth, fruitHeight, fruitColor);
 	
+	// Draw the bonus
 	if (presenceBonusSpeed == true) {
 		colorRect(bonusSpeedPosX, bonusSpeedPosY, bonusSpeedWidth, bonusSpeedHeight, bonusSpeedColor);
 	}
-	
 	if (presenceBonusJump == true) {
 		colorRect(bonusJumpPosX, bonusJumpPosY, bonusJumpWidth, bonusJumpHeight, bonusJumpColor);
 	}
@@ -297,7 +303,7 @@ function drawLaure() {
 	colorRect(laurePosX, laurePosY, laureWidth, laureHeight, laureColor)
 }
 
-// Arrow keys -------------------------------------------------------------------------------------
+// Arrow keys & enter -----------------------------------------------------------------------------
 function keyDown(evt) {
 	switch(evt.keyCode) {
 		case 13:
