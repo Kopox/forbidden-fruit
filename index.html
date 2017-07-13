@@ -7,6 +7,8 @@
 
 <body>
 <canvas id="canvas" width="800" height="600" style="background-color:gainsboro"></canvas>
+<br><br>
+Name: <input type="text" id="inputUser" value="Unknown"> <button onclick="changeUser()">Ok</button>
 <br>
 <h1>High scores</h1>
 <table>
@@ -178,6 +180,7 @@ window.onload = function() {
 	if (user == null || user == "") {
 		user = "Unknown";
 	}
+	document.getElementById("inputUser").value = user;
 	
 	document.addEventListener("keydown", keyDown);
 	document.addEventListener("keyup", keyUp);
@@ -564,9 +567,6 @@ function newScore(user, score, minutes, seconds, miliseconds) {
 		var milisecondsMoved = getData("rank-highest-score", totalRank - i, "miliseconds");
 		writeData(totalRank - i + 1, userMoved, scoreMoved, minutesMoved, 
 			secondsMoved, milisecondsMoved);
-		
-		console.log("iteration: " + i);
-		console.log("totalRank - i: " + (totalRank - i));
 	}
 	
 	// Add the new rank
@@ -635,6 +635,11 @@ function writeData(rank, user, score, minutes, seconds, miliseconds) {
 	seconds: seconds,
 	miliseconds: miliseconds
   });
+}
+
+// Change username
+function changeUser() {
+	user = document.getElementById("inputUser").value;
 }
 
 // Others -----------------------------------------------------------------------------------------
