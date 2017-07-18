@@ -1,10 +1,7 @@
 <html>
-
 <head>
-	<title>Forbidden Fruit</title>
+  <title>Forbidden Fruit</title>
 </head>
-
-
 <body>
 <canvas id="canvas" width="800" height="600" style="background-color:gainsboro"></canvas>
 <br><br>
@@ -13,795 +10,80 @@ Name: <input type="text" id="inputUser" maxlength="200" value="Unknown"> <button
 <h1>High scores</h1>
 <p><i>The high scores are temporarily re-enabled</i></p>
 <table>
-	<col width="15">
-	<col width="200">
-	<col width="100">
-	<col width="175">
-	<tr align="right">
-		<th>Rank</th>
-		<th>Name</th>
-		<th>Score</th>
-		<th>Time</th>
-	</tr>
-	<tr align="right">
-		<th id="highScore1Rank"></th>
-		<th id="highScore1Username"></th>
-		<th id="highScore1Score"></th>
-		<th id="highScore1Time"></th>
-	</tr>
-	<tr align="right">
-		<th id="highScore2Rank"></th>
-		<th id="highScore2Username"></th>
-		<th id="highScore2Score"></th>
-		<th id="highScore2Time"></th>
-	</tr>
-	<tr align="right">
-		<th id="highScore3Rank"></th>
-		<th id="highScore3Username"></th>
-		<th id="highScore3Score"></th>
-		<th id="highScore3Time"></th>
-	</tr>
-	<tr align="right">
-		<th id="highScore4Rank"></th>
-		<th id="highScore4Username"></th>
-		<th id="highScore4Score"></th>
-		<th id="highScore4Time"></th>
-	</tr>
-	<tr align="right">
-		<th id="highScore5Rank"></th>
-		<th id="highScore5Username"></th>
-		<th id="highScore5Score"></th>
-		<th id="highScore5Time"></th>
-	</tr>
-	<tr align="right">
-		<th id="highScore6Rank"></th>
-		<th id="highScore6Username"></th>
-		<th id="highScore6Score"></th>
-		<th id="highScore6Time"></th>
-	</tr>
-	<tr align="right">
-		<th id="highScore7Rank"></th>
-		<th id="highScore7Username"></th>
-		<th id="highScore7Score"></th>
-		<th id="highScore7Time"></th>
-	</tr>
-	<tr align="right">
-		<th id="highScore8Rank"></th>
-		<th id="highScore8Username"></th>
-		<th id="highScore8Score"></th>
-		<th id="highScore8Time"></th>
-	</tr>
-	<tr align="right">
-		<th id="highScore9Rank"></th>
-		<th id="highScore9Username"></th>
-		<th id="highScore9Score"></th>
-		<th id="highScore9Time"></th>
-	</tr>
-	<tr align="right">
-		<th id="highScore10Rank"></th>
-		<th id="highScore10Username"></th>
-		<th id="highScore10Score"></th>
-		<th id="highScore10Time"></th>
-	</tr>
+  <col width="15">
+  <col width="200">
+  <col width="100">
+  <col width="175">
+  <tr align="right">
+    <th>Rank</th>
+    <th>Name</th>
+    <th>Score</th>
+    <th>Time</th>
+  </tr>
+  <tr align="right">
+    <th id="highScore1Rank"></th>
+    <th id="highScore1Username"></th>
+    <th id="highScore1Score"></th>
+    <th id="highScore1Time"></th>
+  </tr>
+  <tr align="right">
+    <th id="highScore2Rank"></th>
+    <th id="highScore2Username"></th>
+    <th id="highScore2Score"></th>
+    <th id="highScore2Time"></th>
+  </tr>
+  <tr align="right">
+    <th id="highScore3Rank"></th>
+    <th id="highScore3Username"></th>
+    <th id="highScore3Score"></th>
+    <th id="highScore3Time"></th>
+  </tr>
+  <tr align="right">
+    <th id="highScore4Rank"></th>
+    <th id="highScore4Username"></th>
+    <th id="highScore4Score"></th>
+    <th id="highScore4Time"></th>
+  </tr>
+  <tr align="right">
+    <th id="highScore5Rank"></th>
+    <th id="highScore5Username"></th>
+    <th id="highScore5Score"></th>
+    <th id="highScore5Time"></th>
+  </tr>
+  <tr align="right">
+    <th id="highScore6Rank"></th>
+    <th id="highScore6Username"></th>
+    <th id="highScore6Score"></th>
+    <th id="highScore6Time"></th>
+  </tr>
+  <tr align="right">
+    <th id="highScore7Rank"></th>
+    <th id="highScore7Username"></th>
+    <th id="highScore7Score"></th>
+    <th id="highScore7Time"></th>
+  </tr>
+  <tr align="right">
+    <th id="highScore8Rank"></th>
+    <th id="highScore8Username"></th>
+    <th id="highScore8Score"></th>
+    <th id="highScore8Time"></th>
+  </tr>
+  <tr align="right">
+    <th id="highScore9Rank"></th>
+    <th id="highScore9Username"></th>
+    <th id="highScore9Score"></th>
+    <th id="highScore9Time"></th>
+  </tr>
+  <tr align="right">
+    <th id="highScore10Rank"></th>
+    <th id="highScore10Username"></th>
+    <th id="highScore10Score"></th>
+    <th id="highScore10Time"></th>
+  </tr>
 </table>
 <script src="https://www.gstatic.com/firebasejs/4.1.3/firebase.js"></script>
 <script>
-// Version
-console.log("version 0.12");
-// High scores block ------------------------------------------------------------------------------
-// Initialize Firebase
-var config = {
-  apiKey: "AIzaSyB4AQ5OAJpaFeRDnQFcBlvz0aaVkx51Tbg",
-  authDomain: "my-project-2e5d5.firebaseapp.com",
-  databaseURL: "https://my-project-2e5d5.firebaseio.com",
-  projectId: "my-project-2e5d5",
-  storageBucket: "",
-  messagingSenderId: "77108976108"
-};
-firebase.initializeApp(config);
-
-// Declaration of the variables for high scores
-var rank = 0;
-var totalRank = 0;
-var user = "Unknown";
-var scoreRegistered = false;
-
-// Declaration of the variables -------------------------------------------------------------------
-var canvas = document.getElementById("canvas");
-var ctx = canvas.getContext("2d");
-
-var showingLoseScreen = false;
-var time = 0;
-var minutes = 0;
-var seconds = 0;
-var miliseconds = 0;
-var score = 0;
-var gravity = 0.25;
-var speedX = 0;
-var jump = 0;
-var initialSpeedX = 3;
-var initialJump = 8;
-
-var blocks = [];
-var numberOfBlocks = 35;
-var floor = new block(100, canvas.height - 50, 400, 200, "grey");
-
-var fruit = 0;
-var fruitPosX = 0;
-var fruitPosY = 0;
-var fruitWidth = 6;
-var fruitHeight = 6;
-var fruitCenterX = 0;
-var fruitCenterY = 0;
-var fruitColor = "orange";
-
-var bonus = 0;
-
-var presenceBonusSpeed = false;
-var bonusSpeedPosX = 0;
-var bonusSpeedPosY = 0;
-var bonusSpeedWidth = 6;
-var bonusSpeedHeight = 6;
-var bonusSpeedCenterX = 0;
-var bonusSpeedCenterY = 0;
-var bonusSpeedColor = "red";
-var bonusSpeedCount = 0;
-
-var presenceBonusJump = false;
-var bonusJumpPosX = 0;
-var bonusJumpPosY = 0;
-var bonusJumpWidth = 6;
-var bonusJumpHeight = 6;
-var bonusJumpCenterX = 0;
-var bonusJumpCenterY = 0;
-var bonusJumpColor = "green";
-var bonusJumpCount = 0;
-
-var laurePosX = 300;
-var laurePosXPrev = 300;
-var laurePosY = 475;
-var laurePosYPrev = 475;
-var laureWidth = 10;
-var laureHeight = 10;
-var laureCenterX = 0;
-var laureCenterY = 0;
-var laureColor = "blue";
-var laureSpeedX = 0;
-var laureSpeedY = 0;
-
-var holdLeft = false;
-var holdRight = false;
-var contactBot = false;
-var contactTop = false;
-var contactSide = false;
-
-// Onload function --------------------------------------------------------------------------------
-window.onload = function() {
-	newScore(user, score, minutes, seconds, miliseconds); // initial request needed, does nothing else
-	reset(); // initialization of variables etc.
-	
-	// Determination of user name
-	user = prompt("What's your name?");
-	if (user == null || user == "") {
-		user = "Unknown";
-	}
-	if (user.length > 200) {
-		user = "Unknown";
-		window.alert("Your name was too long, it was set to Unknown. You can enter another name in the box below.");
-	}
-	document.getElementById("inputUser").value = user;
-	
-	// Event listeners
-	document.addEventListener("keydown", keyDown);
-	document.addEventListener("keyup", keyUp);
-
-	// Main function repeated at each frame
-	var framePerSecond = 60;
-	setInterval(function() {
-		updatePosition();
-		drawAll();
-		debug();
-		
-		if (showingLoseScreen == false) {
-			time += 1;
-			minutes = Math.floor(time / (60 * 60));
-			seconds = Math.floor((time / 60) % 60);
-			miliseconds = Math.floor((time % 60)*100/60);
-			if ((time % (60 * 5)) == 0 || time == 30) {
-				highScoreUpdate();
-			}
-		}
-	}, 1000/framePerSecond);
-}
-
-// Functions called by the onload function --------------------------------------------------------
-// Update the position of the elements
-function updatePosition() {
-	if (showingLoseScreen == true && scoreRegistered == true) {
-		return;
-	}
-	
-	laurePosXPrev = laurePosX;
-	laurePosYPrev = laurePosY;
-	
-	laureSpeedX = 0;
-	if (holdLeft) {
-		laureSpeedX = -speedX;
-	} else if (holdRight) {
-		laureSpeedX = speedX;
-	}
-
-	laurePosX += laureSpeedX;
-	laurePosY += laureSpeedY;
-
-	isContactSide();
-	isContactBot();
-	isContactTop();
-	
-	laureCenterX = laurePosX + laureWidth/2;
-	laureCenterY = laurePosY + laureHeight/2;
-	
-	if (presenceBonusSpeed == true) {
-		isBonusSpeed();
-	}
-	
-	if (presenceBonusJump == true) {
-		isBonusJump();
-	}
-	
-	if (presenceBonusSpeed == false && presenceBonusJump == false) {
-		isFruit();
-	}
-	
-	// Check is laure jumped into the abyss
-	if (laurePosY > 800) {
-		showingLoseScreen = true;
-		if (scoreRegistered == false) {
-			newScore(user, score, minutes, seconds, miliseconds);
-			scoreRegistered = true;
-		}
-	}
-}
-
-// Draw the screen
-function drawAll() {
-	if (showingLoseScreen) {
-		drawLoseScreen()
-		return;
-	}
-	
-	drawBackground();
-	drawLaure();
-}
-
-// Draw elements
-function drawBackground() {
-	colorRect(0, 0, canvas.width, canvas.height, "gainsboro"); // Background
-	writeText("Score: " + score, 50, 50, "left", "black"); // Score
-	writeText("Grab all the forbidden fruits!", 
-		canvas.width/2, 50, "center", "black"); // Objective
-	writeTime(); // Time
-
-	// Draws all blocks
-	for(i = 0; i < blocks.length; i++) {
-		blocks[i].draw();
-	}
-	
-	// Draw the fruit
-	colorRect(fruitPosX, fruitPosY, fruitWidth, fruitHeight, fruitColor);
-	
-	// Draw the bonus
-	if (presenceBonusSpeed == true) {
-		colorRect(bonusSpeedPosX, bonusSpeedPosY, bonusSpeedWidth, bonusSpeedHeight, bonusSpeedColor);
-	}
-	if (presenceBonusJump == true) {
-		colorRect(bonusJumpPosX, bonusJumpPosY, bonusJumpWidth, bonusJumpHeight, bonusJumpColor);
-	}
-}
-
-// Draw laure
-function drawLaure() {
-	colorRect(laurePosX, laurePosY, laureWidth, laureHeight, laureColor)
-}
-
-// Arrow keys & enter -----------------------------------------------------------------------------
-function keyDown(evt) {
-	switch(evt.keyCode) {
-		case 13:
-			if (showingLoseScreen) {
-				showingLoseScreen = false;
-				scoreRegistered = false;
-				reset();
-			}
-			break
-		case 37:
-			holdLeft = true;
-			break;
-		case 38:
-			if(contactBot) {
-				laureSpeedY = -jump;
-			}
-			break
-		case 39:
-			holdRight = true;
-			break
-	}
-}
-
-function keyUp(evt) {
-	switch(evt.keyCode) {
-		case 37:
-			holdLeft = false;
-			break;
-		case 39:
-			holdRight = false;
-			break
-	}
-}
-
-// Check laure position & collision ---------------------------------------------------------------
-// Check if laure is on ground
-function isContactBot() {
-	contactBot = false;
-	for (i = 0; i < blocks.length; i++) { // Check if bottom left corner of laure is on ground
-		if (laurePosYPrev < blocks[i].posY &&
-		laurePosY + laureHeight >= blocks[i].posY &&
-		laurePosX > blocks[i].posX && 
-		laurePosX < blocks[i].posX + blocks[i].width) {
-			contactBot = true;
-			laurePosY = blocks[i].posY - laureHeight;
-		}
-	}
-	for (i = 0; i < blocks.length; i++) { // Check if bottom right corner of laure is on ground
-		if (laurePosYPrev < blocks[i].posY &&
-		laurePosY + laureHeight >= blocks[i].posY &&
-		laurePosX + laureWidth > blocks[i].posX && 
-		laurePosX + laureWidth < blocks[i].posX + blocks[i].width) {
-			contactBot = true;
-			laurePosY = blocks[i].posY - laureHeight;
-		}
-	}
-	if(contactBot) {
-		laureSpeedY = 0;
-	} else {
-		laureSpeedY += gravity;
-	}
-}
-
-// Check if the top of laure's head touches a block from the botton
-function isContactTop() {
-	contactTop = false;
-	for (i = 0; i < blocks.length; i++) { // Check if top right corner touches the bottom of a block
-		if (laurePosYPrev >= blocks[i].posY + blocks[i].height &&
-		laurePosY < blocks[i].posY + blocks[i].height &&
-		laurePosX + laureWidth > blocks[i].posX && 
-		laurePosX + laureWidth < blocks[i].posX + blocks[i].width) {
-			contactTop = true;
-			laurePosY = blocks[i].posY + blocks[i].height;
-			laureSpeedY = 0;
-		}
-	}
-	for (i = 0; i < blocks.length; i++) { // Check if top left corner touches the bottom of a block
-		if (laurePosYPrev >= blocks[i].posY + blocks[i].height &&
-		laurePosY < blocks[i].posY + blocks[i].height &&
-		laurePosX > blocks[i].posX && laurePosX < blocks[i].posX + blocks[i].width) {
-			contactTop = true;
-			laurePosY = blocks[i].posY + blocks[i].height;
-			laureSpeedY = 0;
-		}
-	}
-}
-
-// Check if a side of laure touches a side of a block
-function isContactSide() {
-	contactSide = false;
-	for (i = 0; i < blocks.length; i++) { // Check if bottom left corner of laure touches the right side of block
-		if (laurePosXPrev >= blocks[i].posX + blocks[i].width &&
-		laurePosY + laureHeight > blocks[i].posY && 
-		laurePosY + laureHeight < blocks[i].posY + blocks[i].height &&
-		laurePosX <= blocks[i].posX + blocks[i].width && 
-		laurePosX > blocks[i].posX) {
-			contactSide = true;
-			laurePosX = blocks[i].posX + blocks[i].width;
-			laureSpeedX = 0;
-		}
-	}
-	for (i = 0; i < blocks.length; i++) { // Check if bottom right corner of laure touches the left side of block
-		if (laurePosXPrev + laureWidth <= blocks[i].posX &&
-		laurePosY + laureHeight > blocks[i].posY && 
-		laurePosY + laureHeight < blocks[i].posY + blocks[i].height &&
-		laurePosX + laureWidth >= blocks[i].posX && 
-		laurePosX + laureWidth < blocks[i].posX + blocks[i].width) {
-			contactSide = true;
-			laurePosX = blocks[i].posX - laureWidth;
-			laureSpeedX = 0;
-		}
-	}
-	for (i = 0; i < blocks.length; i++) { // Check if top left corner of laure touches the right side of block
-		if (laurePosXPrev >= blocks[i].posX + blocks[i].width &&
-		laurePosY > blocks[i].posY && 
-		laurePosY < blocks[i].posY + blocks[i].height &&
-		laurePosX <= blocks[i].posX + blocks[i].width && 
-		laurePosX > blocks[i].posX) {
-			contactSide = true;
-			laurePosX = blocks[i].posX + blocks[i].width;
-			laureSpeedX = 0;
-		}
-	}
-	for (i = 0; i < blocks.length; i++) { // Check if top right corner of laure touches the left side of block
-		if (laurePosXPrev + laureWidth <= blocks[i].posX &&
-		laurePosY > blocks[i].posY && 
-		laurePosY < blocks[i].posY + blocks[i].height &&
-		laurePosX + laureWidth >= blocks[i].posX && 
-		laurePosX + laureWidth < blocks[i].posX + blocks[i].width) {
-			contactSide = true;
-			laurePosX = blocks[i].posX - laureWidth;
-			laureSpeedX = 0;
-		}
-	}
-}
-
-// Check is laure touches the fruit
-function isFruit() {
-	if (Math.getDistance(laureCenterX, laureCenterY, fruitCenterX, fruitCenterY) <
-	(laureWidth + fruitWidth)/2) {
-		score += 1;
-		initialPos();
-	}
-	
-	if (((laurePosXPrev < fruitCenterX && laurePosX > fruitCenterX) || // Check if laure crossed the fruit
-	(laurePosXPrev > fruitCenterX && laurePosX < fruitCenterX)) &&
-	Math.abs(laurePosYPrev - fruitCenterY) < laureHeight/2 &&
-	Math.abs(laurePosY - fruitCenterY) < laureHeight/2) {
-		score += 1;
-		initialPos();
-	}
-}
-
-// Check is laure touches the bonus speed
-function isBonusSpeed() {
-	if (Math.getDistance(laureCenterX, laureCenterY, bonusSpeedCenterX, bonusSpeedCenterY) <
-	(laureWidth + bonusSpeedWidth)/2) {
-		speedX += 4;
-		presenceBonusSpeed = false;
-	}
-	
-	if (((laurePosXPrev < bonusSpeedCenterX && laurePosX > bonusSpeedCenterX) ||
-	(laurePosXPrev > bonusSpeedCenterX && laurePosX < bonusSpeedCenterX)) &&
-	Math.abs(laurePosYPrev - bonusSpeedCenterY) < laureHeight/2 &&
-	Math.abs(laurePosY - bonusSpeedCenterY) < laureHeight/2) {
-		speedX += 4;
-		presenceBonusSpeed = false;
-	}
-}
-
-// Check is laure touches the bonus jump
-function isBonusJump() {
-	if (Math.getDistance(laureCenterX, laureCenterY, bonusJumpCenterX, bonusJumpCenterY) <
-	(laureWidth + bonusJumpWidth)/2) {
-		jump += 4;
-		presenceBonusJump = false;
-	}
-	
-	if (((laurePosXPrev < bonusJumpCenterX && laurePosX > bonusJumpCenterX) ||
-	(laurePosXPrev > bonusJumpCenterX && laurePosX < bonusJumpCenterX)) &&
-	Math.abs(laurePosYPrev - bonusJumpCenterY) < laureHeight/2 &&
-	Math.abs(laurePosY - bonusJumpCenterY) < laureHeight/2) {
-		jump += 4;
-		presenceBonusJump = false;
-	}
-}
-
-// Draw lose screen -------------------------------------------------------------------------------
-function drawLoseScreen() {
-	colorRect(canvas.width/2 - 200, canvas.height/4, 400, 185, "black");
-	if (score > 0) {
-		writeText("Rank " + rank + "/" + totalRank, 
-			canvas.width/2, canvas.height/4 + 50, "center", "white");
-	}
-	writeText("You grabbed " + score + " forbidden fruits in " + 
-		minutes + " minutes and " +	seconds + " seconds!", 
-		canvas.width/2, canvas.height/4 + 75, "center", "white");
-	writeText("Press enter to reset.", canvas.width/2, canvas.height/4 + 130,
-		"center", "white");
-	
-	if (score == 0) { // Could be improved with a switch
-		writeText("You did not find you true purpose yet.", 
-		canvas.width/2, canvas.height/4 + 100, "center", "white");
-	} else if (score <= 2) {
-		writeText("I don't know what to tell you... Try again?", 
-		canvas.width/2, canvas.height/4 + 100, "center", "white");
-	} else if (score == 3) {
-		writeText("Ramsay Bolton did this score.", 
-		canvas.width/2, canvas.height/4 + 100, "center", "white");
-	} else if (score <= 5) {
-		writeText("It's terrible... What are you? Left handed?", 
-		canvas.width/2, canvas.height/4 + 100, "center", "white");
-	} else if (score <= 7) {
-		writeText("Yeah! That's quite reasonable for a first try!", 
-		canvas.width/2, canvas.height/4 + 100, "center", "white");
-	} else if (score <= 9) {
-		writeText("Wow, you almost have a decent score!", 
-		canvas.width/2, canvas.height/4 + 100, "center", "white");
-	} else if (score == 10) {
-		writeText("That's a decent score.", 
-		canvas.width/2, canvas.height/4 + 100, "center", "white");
-	} else if (score == 11) {
-		writeText("That's a little bit more than a decent score!", 
-		canvas.width/2, canvas.height/4 + 100, "center", "white");
-	} else if (score == 12) {
-		writeText("Congratulations! You're a real fruit eater, buddy!", 
-		canvas.width/2, canvas.height/4 + 100, "center", "white");
-	} else if (score == 13) {
-		writeText("You're getting good!", 
-		canvas.width/2, canvas.height/4 + 100, "center", "white");
-	} else if (score == 14) {
-		writeText("You're getting pretty good!", 
-		canvas.width/2, canvas.height/4 + 100, "center", "white");
-	} else if (score == 15) {
-		writeText("You're awesome, aren't you?", 
-		canvas.width/2, canvas.height/4 + 100, "center", "white");
-	} else if (score > 15) {
-		writeText("I'm proud of you, there's nothing more to say.", 
-		canvas.width/2, canvas.height/4 + 100, "center", "white");
-	}
-}
-
-// Firebase related -------------------------------------------------------------------------------
-// Addition of a new score
-function newScore(user, score, minutes, seconds, miliseconds) {
-	checkTotalRank();
-	if (totalRank == 0 || score == 0) {
-		return;
-	}
-	
-	// Get the rank for the score to be added
-	for (i = 1; i <= totalRank; i++) {
-		var scoreCompared = Number(getData("rank-highest-score", i, "score"));
-		
-		if (scoreCompared < score) { // Compare the score
-			rank = i;
-			break;
-		} else if (scoreCompared == score) { // If the score is equal, compare the time
-			var minutesCompared = Number(getData("rank-highest-score", i, "minutes"));
-			var secondsCompared = Number(getData("rank-highest-score", i, "seconds"));
-			var milisecondsCompared = Number(getData("rank-highest-score", i, "miliseconds"));
-			if (minutes < minutesCompared ||
-			(minutes == minutesCompared && seconds < secondsCompared) ||
-			(minutes == minutesCompared && seconds == secondsCompared && 
-			miliseconds < milisecondsCompared)) {
-				rank = i;
-				break;
-			}
-		} else if (i == totalRank) { // If it score/time is the worst, new last rank
-			rank = i + 1;
-		}
-	}
-
-	// Update the database to make room for the new rank
-	for (i = 0; i <= (totalRank - rank); i++) {
-		var userMoved = getData("rank-highest-score", totalRank - i, "username");
-		var scoreMoved = getData("rank-highest-score", totalRank - i, "score");
-		var minutesMoved = getData("rank-highest-score", totalRank - i, "minutes");
-		var secondsMoved = getData("rank-highest-score", totalRank - i, "seconds");
-		var milisecondsMoved = getData("rank-highest-score", totalRank - i, "miliseconds");
-		writeData(totalRank - i + 1, userMoved, scoreMoved, minutesMoved, 
-			secondsMoved, milisecondsMoved);
-	}
-	
-	// Add the new rank
-	var secondsString = seconds;
-	var milisecondsString = miliseconds;
-	if(seconds < 10) {
-		secondsString = "0" + seconds;
-	}
-	if(miliseconds < 10) {
-		milisecondsString = "0" + miliseconds;
-	}
-	writeData(rank, user, score, minutes, secondsString, milisecondsString);
-
-	// Update the high score table
-	highScoreUpdate();
-}
-
-// Update the high score table
-function highScoreUpdate() {
-	for (i = 1; i <= 10; i++) {
-		var userWritten = getData("rank-highest-score", i, "username");
-		var scoreWritten = getData("rank-highest-score", i, "score");
-		var minutesWritten = getData("rank-highest-score", i, "minutes");
-		var secondsWritten = getData("rank-highest-score", i, "seconds");
-		var milisecondsWritten = getData("rank-highest-score", i, "miliseconds");
-		
-		var rankBox = "highScore" + i + "Rank";
-		var userBox = "highScore" + i + "Username";		
-		var scoreBox = "highScore" + i + "Score";		
-		var timeBox = "highScore" + i + "Time";
-		
-		var timeWritten = minutesWritten + " min " + secondsWritten + " s " + milisecondsWritten + " ms";
-
-		document.getElementById(rankBox).innerHTML = i;
-		document.getElementById(userBox).innerHTML = userWritten;
-		document.getElementById(scoreBox).innerHTML = scoreWritten;
-		document.getElementById(timeBox).innerHTML = timeWritten;
-	}
-}
-
-// Check the number of ranks
-function checkTotalRank() {
-	firebase.database().ref().child("rank-highest-score").on("value", function(snapshot) {
-		totalRank = snapshot.numChildren()
-	})
-}
-
-// Get a data from Firebase
-function getData(rankType, rank, dataType) {
-	var scoreRef = firebase.database().ref(rankType + "/" + rank + "/" + dataType);
-	var returnValue = 0;
-	
-	scoreRef.on("value", function(snapshot) {
-		returnValue = snapshot.val();
-	});
-	
-	return returnValue;
-}
-
-// Write a data in Firebase
-function writeData(rank, user, score, minutes, seconds, miliseconds) {
-  firebase.database().ref('rank-highest-score/' + rank).set({
-    username: user,
-    score: score,
-	minutes: minutes,
-	seconds: seconds,
-	miliseconds: miliseconds
-  });
-}
-
-// Change username
-function changeUser() {
-	user = document.getElementById("inputUser").value;
-}
-
-// Others -----------------------------------------------------------------------------------------
-// Math
-Math.getDistance = function(x1, y1, x2, y2) {
-	var xs = x2 - x1;
-	var ys = y2 - y1;
-	xs *= xs;
-	ys *= ys;
-	return Math.sqrt(xs + ys);
-}
-
-// Graphism
-function colorRect(posX, posY, width, height, drawColor) {
-	ctx.fillStyle = drawColor;
-	ctx.fillRect(posX, posY, width, height);
-}
-
-function writeText(text, posX, posY, align, textColor) {
-	ctx.fillStyle = textColor;
-	ctx.textAlign = align;
-	ctx.fillText(text, posX, posY)
-}
-
-// Write time
-function writeTime() {
-	var minutesString = minutes;
-	var secondsString = seconds;
-	
-	if(minutes < 10) {
-		minutesString = "0" + minutes;
-	}
-	if(seconds < 10) {
-		secondsString = "0" + seconds;
-	}
-
-	writeText(minutesString + ":" + secondsString,
-		canvas.width - 50, 50, "right", "black"); // Timer
-}
-
-// Block object
-function block(posX, posY, width, height, color) {
-	this.posX = posX;
-	this.posY = posY;
-	this.width = width;
-	this.height = height;
-	this.color = color;
-	this.draw = function() {
-		colorRect(this.posX, this.posY, this.width, this.height, this.color);
-	}
-}
-
-// Generation of the blocks positions and sizes + bonus
-function generateBlocks() {	
-	for (i = 1; i < numberOfBlocks; i++) {
-		blocks[i] = new block(Math.random()*canvas.width*0.9,
-			Math.floor(Math.random()*canvas.height*0.7/25)*25 + 100,
-			Math.random()*125 + 25,
-			10,
-			"grey");
-	}
-
-	do {
-		fruit = Math.floor(Math.random() * numberOfBlocks)
-	}
-	while (fruit < 1);
-	fruitPosX = blocks[fruit].posX + blocks[fruit].width/2 - fruitWidth/2;
-	fruitPosY = blocks[fruit].posY - 12
-	fruitCenterX = fruitPosX + fruitWidth/2;
-	fruitCenterY = fruitPosY + fruitHeight/2;
-	
-	do {
-		bonus = Math.floor(Math.random() * numberOfBlocks)
-	}
-	while (bonus < 1 || bonus == fruit);
-	
-	if (score == 0) {
-		bonus = undefined;
-	}
-	
-	if (bonusSpeedCount > 2 * bonusJumpCount) {
-		bonus = 3
-	}
-	if (bonusJumpCount > 2 * bonusSpeedCount) {
-		bonus = 4
-	}
-	
-	if (bonus % 2 == 0) {
-		presenceBonusSpeed = true;
-		bonusSpeedCount += 1;
-		bonusSpeedPosX = blocks[bonus].posX + blocks[bonus].width/2 - bonusSpeedWidth/2;
-		bonusSpeedPosY = blocks[bonus].posY - 12
-		bonusSpeedCenterX = bonusSpeedPosX + bonusSpeedWidth/2;
-		bonusSpeedCenterY = bonusSpeedPosY + bonusSpeedHeight/2;
-	} else {
-		presenceBonusSpeed = false;
-	}
-	
-
-	if ((bonus + 1) % 2 == 0) {
-		presenceBonusJump = true;
-		bonusJumpCount += 1;
-		bonusJumpPosX = blocks[bonus].posX + blocks[bonus].width/2 - bonusJumpWidth/2;
-		bonusJumpPosY = blocks[bonus].posY - 12
-		bonusJumpCenterX = bonusJumpPosX + bonusJumpWidth/2;
-		bonusJumpCenterY = bonusJumpPosY + bonusJumpHeight/2;
-	} else {
-		presenceBonusJump = false;
-	}
-}
-
-// Initialisation
-function initialPos() {
-	laurePosX = 300 - laureWidth/2;
-	laurePosXPrev = 300;
-	laurePosY = 475;
-	laurePosYPrev = 475;
-	laureSpeedX = 0;
-	laureSpeedY = 0;
-
-	blocks[0] = floor;
-	
-	generateBlocks();
-}
-
-// Reset
-function reset() {
-	time = 0;
-	score = 0;
-	bonusJumpCount = 0;
-	bonusSpeedCount = 0;
-	speedX = initialSpeedX;
-	jump = initialJump;
-	initialPos();
-}
-
-// Just a function to debug
-function debug() {
-}
-
+var _0xcd54=["\x76\x65\x72\x73\x69\x6F\x6E\x20\x30\x2E\x31\x32","\x6C\x6F\x67","\x41\x49\x7A\x61\x53\x79\x42\x34\x41\x51\x35\x4F\x41\x4A\x70\x61\x46\x65\x52\x44\x6E\x51\x46\x63\x42\x6C\x76\x7A\x30\x61\x61\x56\x6B\x78\x35\x31\x54\x62\x67","\x6D\x79\x2D\x70\x72\x6F\x6A\x65\x63\x74\x2D\x32\x65\x35\x64\x35\x2E\x66\x69\x72\x65\x62\x61\x73\x65\x61\x70\x70\x2E\x63\x6F\x6D","\x68\x74\x74\x70\x73\x3A\x2F\x2F\x6D\x79\x2D\x70\x72\x6F\x6A\x65\x63\x74\x2D\x32\x65\x35\x64\x35\x2E\x66\x69\x72\x65\x62\x61\x73\x65\x69\x6F\x2E\x63\x6F\x6D","\x6D\x79\x2D\x70\x72\x6F\x6A\x65\x63\x74\x2D\x32\x65\x35\x64\x35","","\x37\x37\x31\x30\x38\x39\x37\x36\x31\x30\x38","\x69\x6E\x69\x74\x69\x61\x6C\x69\x7A\x65\x41\x70\x70","\x55\x6E\x6B\x6E\x6F\x77\x6E","\x63\x61\x6E\x76\x61\x73","\x67\x65\x74\x45\x6C\x65\x6D\x65\x6E\x74\x42\x79\x49\x64","\x32\x64","\x67\x65\x74\x43\x6F\x6E\x74\x65\x78\x74","\x6F\x72\x61\x6E\x67\x65","\x72\x65\x64","\x67\x72\x65\x65\x6E","\x62\x6C\x75\x65","\x6F\x6E\x6C\x6F\x61\x64","\x57\x68\x61\x74\x27\x73\x20\x79\x6F\x75\x72\x20\x6E\x61\x6D\x65\x3F","\x6C\x65\x6E\x67\x74\x68","\x59\x6F\x75\x72\x20\x6E\x61\x6D\x65\x20\x77\x61\x73\x20\x74\x6F\x6F\x20\x6C\x6F\x6E\x67\x2C\x20\x69\x74\x20\x77\x61\x73\x20\x73\x65\x74\x20\x74\x6F\x20\x55\x6E\x6B\x6E\x6F\x77\x6E\x2E\x20\x59\x6F\x75\x20\x63\x61\x6E\x20\x65\x6E\x74\x65\x72\x20\x61\x6E\x6F\x74\x68\x65\x72\x20\x6E\x61\x6D\x65\x20\x69\x6E\x20\x74\x68\x65\x20\x62\x6F\x78\x20\x62\x65\x6C\x6F\x77\x2E","\x61\x6C\x65\x72\x74","\x76\x61\x6C\x75\x65","\x69\x6E\x70\x75\x74\x55\x73\x65\x72","\x6B\x65\x79\x64\x6F\x77\x6E","\x61\x64\x64\x45\x76\x65\x6E\x74\x4C\x69\x73\x74\x65\x6E\x65\x72","\x6B\x65\x79\x75\x70","\x66\x6C\x6F\x6F\x72","\x77\x69\x64\x74\x68","\x68\x65\x69\x67\x68\x74","\x67\x61\x69\x6E\x73\x62\x6F\x72\x6F","\x53\x63\x6F\x72\x65\x3A\x20","\x6C\x65\x66\x74","\x62\x6C\x61\x63\x6B","\x47\x72\x61\x62\x20\x61\x6C\x6C\x20\x74\x68\x65\x20\x66\x6F\x72\x62\x69\x64\x64\x65\x6E\x20\x66\x72\x75\x69\x74\x73\x21","\x63\x65\x6E\x74\x65\x72","\x64\x72\x61\x77","\x6B\x65\x79\x43\x6F\x64\x65","\x70\x6F\x73\x59","\x70\x6F\x73\x58","\x67\x65\x74\x44\x69\x73\x74\x61\x6E\x63\x65","\x61\x62\x73","\x52\x61\x6E\x6B\x20","\x2F","\x77\x68\x69\x74\x65","\x59\x6F\x75\x20\x67\x72\x61\x62\x62\x65\x64\x20","\x20\x66\x6F\x72\x62\x69\x64\x64\x65\x6E\x20\x66\x72\x75\x69\x74\x73\x20\x69\x6E\x20","\x20\x6D\x69\x6E\x75\x74\x65\x73\x20\x61\x6E\x64\x20","\x20\x73\x65\x63\x6F\x6E\x64\x73\x21","\x50\x72\x65\x73\x73\x20\x65\x6E\x74\x65\x72\x20\x74\x6F\x20\x72\x65\x73\x65\x74\x2E","\x59\x6F\x75\x20\x64\x69\x64\x20\x6E\x6F\x74\x20\x66\x69\x6E\x64\x20\x79\x6F\x75\x20\x74\x72\x75\x65\x20\x70\x75\x72\x70\x6F\x73\x65\x20\x79\x65\x74\x2E","\x49\x20\x64\x6F\x6E\x27\x74\x20\x6B\x6E\x6F\x77\x20\x77\x68\x61\x74\x20\x74\x6F\x20\x74\x65\x6C\x6C\x20\x79\x6F\x75\x2E\x2E\x2E\x20\x54\x72\x79\x20\x61\x67\x61\x69\x6E\x3F","\x52\x61\x6D\x73\x61\x79\x20\x42\x6F\x6C\x74\x6F\x6E\x20\x64\x69\x64\x20\x74\x68\x69\x73\x20\x73\x63\x6F\x72\x65\x2E","\x49\x74\x27\x73\x20\x74\x65\x72\x72\x69\x62\x6C\x65\x2E\x2E\x2E\x20\x57\x68\x61\x74\x20\x61\x72\x65\x20\x79\x6F\x75\x3F\x20\x4C\x65\x66\x74\x20\x68\x61\x6E\x64\x65\x64\x3F","\x59\x65\x61\x68\x21\x20\x54\x68\x61\x74\x27\x73\x20\x71\x75\x69\x74\x65\x20\x72\x65\x61\x73\x6F\x6E\x61\x62\x6C\x65\x20\x66\x6F\x72\x20\x61\x20\x66\x69\x72\x73\x74\x20\x74\x72\x79\x21","\x57\x6F\x77\x2C\x20\x79\x6F\x75\x20\x61\x6C\x6D\x6F\x73\x74\x20\x68\x61\x76\x65\x20\x61\x20\x64\x65\x63\x65\x6E\x74\x20\x73\x63\x6F\x72\x65\x21","\x54\x68\x61\x74\x27\x73\x20\x61\x20\x64\x65\x63\x65\x6E\x74\x20\x73\x63\x6F\x72\x65\x2E","\x54\x68\x61\x74\x27\x73\x20\x61\x20\x6C\x69\x74\x74\x6C\x65\x20\x62\x69\x74\x20\x6D\x6F\x72\x65\x20\x74\x68\x61\x6E\x20\x61\x20\x64\x65\x63\x65\x6E\x74\x20\x73\x63\x6F\x72\x65\x21","\x43\x6F\x6E\x67\x72\x61\x74\x75\x6C\x61\x74\x69\x6F\x6E\x73\x21\x20\x59\x6F\x75\x27\x72\x65\x20\x61\x20\x72\x65\x61\x6C\x20\x66\x72\x75\x69\x74\x20\x65\x61\x74\x65\x72\x2C\x20\x62\x75\x64\x64\x79\x21","\x59\x6F\x75\x27\x72\x65\x20\x67\x65\x74\x74\x69\x6E\x67\x20\x67\x6F\x6F\x64\x21","\x59\x6F\x75\x27\x72\x65\x20\x67\x65\x74\x74\x69\x6E\x67\x20\x70\x72\x65\x74\x74\x79\x20\x67\x6F\x6F\x64\x21","\x59\x6F\x75\x27\x72\x65\x20\x61\x77\x65\x73\x6F\x6D\x65\x2C\x20\x61\x72\x65\x6E\x27\x74\x20\x79\x6F\x75\x3F","\x49\x27\x6D\x20\x70\x72\x6F\x75\x64\x20\x6F\x66\x20\x79\x6F\x75\x2C\x20\x74\x68\x65\x72\x65\x27\x73\x20\x6E\x6F\x74\x68\x69\x6E\x67\x20\x6D\x6F\x72\x65\x20\x74\x6F\x20\x73\x61\x79\x2E","\x72\x61\x6E\x6B\x2D\x68\x69\x67\x68\x65\x73\x74\x2D\x73\x63\x6F\x72\x65","\x73\x63\x6F\x72\x65","\x6D\x69\x6E\x75\x74\x65\x73","\x73\x65\x63\x6F\x6E\x64\x73","\x6D\x69\x6C\x69\x73\x65\x63\x6F\x6E\x64\x73","\x75\x73\x65\x72\x6E\x61\x6D\x65","\x30","\x68\x69\x67\x68\x53\x63\x6F\x72\x65","\x55\x73\x65\x72\x6E\x61\x6D\x65","\x53\x63\x6F\x72\x65","\x54\x69\x6D\x65","\x20\x6D\x69\x6E\x20","\x20\x73\x20","\x20\x6D\x73","\x69\x6E\x6E\x65\x72\x48\x54\x4D\x4C","\x52\x61\x6E\x6B","\x6E\x75\x6D\x43\x68\x69\x6C\x64\x72\x65\x6E","\x6F\x6E","\x63\x68\x69\x6C\x64","\x72\x65\x66","\x64\x61\x74\x61\x62\x61\x73\x65","\x76\x61\x6C","\x73\x65\x74","\x72\x61\x6E\x6B\x2D\x68\x69\x67\x68\x65\x73\x74\x2D\x73\x63\x6F\x72\x65\x2F","\x73\x71\x72\x74","\x66\x69\x6C\x6C\x53\x74\x79\x6C\x65","\x66\x69\x6C\x6C\x52\x65\x63\x74","\x74\x65\x78\x74\x41\x6C\x69\x67\x6E","\x66\x69\x6C\x6C\x54\x65\x78\x74","\x3A","\x72\x69\x67\x68\x74","\x63\x6F\x6C\x6F\x72","\x72\x61\x6E\x64\x6F\x6D","\x67\x72\x65\x79"];console[_0xcd54[1]](_0xcd54[0]);var config={apiKey:_0xcd54[2],authDomain:_0xcd54[3],databaseURL:_0xcd54[4],projectId:_0xcd54[5],storageBucket:_0xcd54[6],messagingSenderId:_0xcd54[7]};firebase[_0xcd54[8]](config);var rank=0,totalRank=0,user=_0xcd54[9],scoreRegistered=!1,canvas=document[_0xcd54[11]](_0xcd54[10]),ctx=canvas[_0xcd54[13]](_0xcd54[12]),showingLoseScreen=!1,time=0,minutes=0,seconds=0,miliseconds=0,score=0,gravity=0.25,speedX=0,jump=0,initialSpeedX=3,initialJump=8,blocks=[],numberOfBlocks=35,floor=[],fruit=0,fruitPosX=0,fruitPosY=0,fruitWidth=6,fruitHeight=6,fruitCenterX=0,fruitCenterY=0,fruitColor=_0xcd54[14],bonus=0,presenceBonusSpeed=!1,bonusSpeedPosX=0,bonusSpeedPosY=0,bonusSpeedWidth=6,bonusSpeedHeight=6,bonusSpeedCenterX=0,bonusSpeedCenterY=0,bonusSpeedColor=_0xcd54[15],bonusSpeedCount=0,presenceBonusJump=!1,bonusJumpPosX=0,bonusJumpPosY=0,bonusJumpWidth=6,bonusJumpHeight=6,bonusJumpCenterX=0,bonusJumpCenterY=0,bonusJumpColor=_0xcd54[16],bonusJumpCount=0,laurePosX=300,laurePosXPrev=300,laurePosY=475,laurePosYPrev=475,laureWidth=10,laureHeight=10,laureCenterX=0,laureCenterY=0,laureColor=_0xcd54[17],laureSpeedX=0,laureSpeedY=0,holdLeft=!1,holdRight=!1,contactBot=!1,contactTop=!1,contactSide=!1;window[_0xcd54[18]]= function(){newScore(user,score,minutes,seconds,miliseconds);reset();user= prompt(_0xcd54[19]);if(null== user|| _0xcd54[6]== user){user= _0xcd54[9]};200< user[_0xcd54[20]]&& (user= _0xcd54[9],window[_0xcd54[22]](_0xcd54[21]));document[_0xcd54[11]](_0xcd54[24])[_0xcd54[23]]= user;document[_0xcd54[26]](_0xcd54[25],keyDown);document[_0xcd54[26]](_0xcd54[27],keyUp);setInterval(function(){updatePosition();drawAll();debug();0== showingLoseScreen&& (time+= 1,minutes= Math[_0xcd54[28]](time/ 3600),seconds= Math[_0xcd54[28]](time/ 60% 60),miliseconds= Math[_0xcd54[28]](time% 60* 100/ 60),0!= time% 300&& 30!= time|| highScoreUpdate())},1E3/ 60)};function updatePosition(){if(1!= showingLoseScreen|| 1!= scoreRegistered){laurePosXPrev= laurePosX,laurePosYPrev= laurePosY,laureSpeedX= 0,holdLeft?laureSpeedX=  -speedX:holdRight&& (laureSpeedX= speedX),laurePosX+= laureSpeedX,laurePosY+= laureSpeedY,isContactSide(),isContactBot(),isContactTop(),laureCenterX= laurePosX+ laureWidth/ 2,laureCenterY= laurePosY+ laureHeight/ 2,1== presenceBonusSpeed&& isBonusSpeed(),1== presenceBonusJump&& isBonusJump(),0== presenceBonusSpeed&& 0== presenceBonusJump&& isFruit(),800< laurePosY&& (showingLoseScreen=  !0,0== scoreRegistered&& (newScore(user,score,minutes,seconds,miliseconds),scoreRegistered=  !0))}}function drawAll(){showingLoseScreen?drawLoseScreen():(drawBackground(),drawLaure())}function drawBackground(){colorRect(0,0,canvas[_0xcd54[29]],canvas[_0xcd54[30]],_0xcd54[31]);writeText(_0xcd54[32]+ score,50,50,_0xcd54[33],_0xcd54[34]);writeText(_0xcd54[35],canvas[_0xcd54[29]]/ 2,50,_0xcd54[36],_0xcd54[34]);writeTime();for(i= 0;i< blocks[_0xcd54[20]];i+= 1){blocks[i][_0xcd54[37]]()};colorRect(fruitPosX,fruitPosY,fruitWidth,fruitHeight,fruitColor);1== presenceBonusSpeed&& colorRect(bonusSpeedPosX,bonusSpeedPosY,bonusSpeedWidth,bonusSpeedHeight,bonusSpeedColor);1== presenceBonusJump&& colorRect(bonusJumpPosX,bonusJumpPosY,bonusJumpWidth,bonusJumpHeight,bonusJumpColor)}function drawLaure(){colorRect(laurePosX,laurePosY,laureWidth,laureHeight,laureColor)}function keyDown(_0xd0f7x46){switch(_0xd0f7x46[_0xcd54[38]]){case 13:showingLoseScreen&& (scoreRegistered= showingLoseScreen=  !1,reset());break;case 37:holdLeft=  !0;break;case 38:contactBot&& (laureSpeedY=  -jump);break;case 39:holdRight=  !0}}function keyUp(_0xd0f7x46){switch(_0xd0f7x46[_0xcd54[38]]){case 37:holdLeft=  !1;break;case 39:holdRight=  !1}}function isContactBot(){contactBot=  !1;for(i= 0;i< blocks[_0xcd54[20]];i+= 1){laurePosYPrev< blocks[i][_0xcd54[39]]&& laurePosY+ laureHeight>= blocks[i][_0xcd54[39]]&& laurePosX> blocks[i][_0xcd54[40]]&& laurePosX< blocks[i][_0xcd54[40]]+ blocks[i][_0xcd54[29]]&& (contactBot=  !0,laurePosY= blocks[i][_0xcd54[39]]- laureHeight)};for(i= 0;i< blocks[_0xcd54[20]];i+= 1){laurePosYPrev< blocks[i][_0xcd54[39]]&& laurePosY+ laureHeight>= blocks[i][_0xcd54[39]]&& laurePosX+ laureWidth> blocks[i][_0xcd54[40]]&& laurePosX+ laureWidth< blocks[i][_0xcd54[40]]+ blocks[i][_0xcd54[29]]&& (contactBot=  !0,laurePosY= blocks[i][_0xcd54[39]]- laureHeight)};laureSpeedY= contactBot?0:laureSpeedY+ gravity}function isContactTop(){contactTop=  !1;for(i= 0;i< blocks[_0xcd54[20]];i+= 1){laurePosYPrev>= blocks[i][_0xcd54[39]]+ blocks[i][_0xcd54[30]]&& laurePosY< blocks[i][_0xcd54[39]]+ blocks[i][_0xcd54[30]]&& laurePosX+ laureWidth> blocks[i][_0xcd54[40]]&& laurePosX+ laureWidth< blocks[i][_0xcd54[40]]+ blocks[i][_0xcd54[29]]&& (contactTop=  !0,laurePosY= blocks[i][_0xcd54[39]]+ blocks[i][_0xcd54[30]],laureSpeedY= 0)};for(i= 0;i< blocks[_0xcd54[20]];i+= 1){laurePosYPrev>= blocks[i][_0xcd54[39]]+ blocks[i][_0xcd54[30]]&& laurePosY< blocks[i][_0xcd54[39]]+ blocks[i][_0xcd54[30]]&& laurePosX> blocks[i][_0xcd54[40]]&& laurePosX< blocks[i][_0xcd54[40]]+ blocks[i][_0xcd54[29]]&& (contactTop=  !0,laurePosY= blocks[i][_0xcd54[39]]+ blocks[i][_0xcd54[30]],laureSpeedY= 0)}}function isContactSide(){contactSide=  !1;for(i= 0;i< blocks[_0xcd54[20]];i+= 1){laurePosXPrev>= blocks[i][_0xcd54[40]]+ blocks[i][_0xcd54[29]]&& laurePosY+ laureHeight> blocks[i][_0xcd54[39]]&& laurePosY+ laureHeight< blocks[i][_0xcd54[39]]+ blocks[i][_0xcd54[30]]&& laurePosX<= blocks[i][_0xcd54[40]]+ blocks[i][_0xcd54[29]]&& laurePosX> blocks[i][_0xcd54[40]]&& (contactSide=  !0,laurePosX= blocks[i][_0xcd54[40]]+ blocks[i][_0xcd54[29]],laureSpeedX= 0)};for(i= 0;i< blocks[_0xcd54[20]];i+= 1){laurePosXPrev+ laureWidth<= blocks[i][_0xcd54[40]]&& laurePosY+ laureHeight> blocks[i][_0xcd54[39]]&& laurePosY+ laureHeight< blocks[i][_0xcd54[39]]+ blocks[i][_0xcd54[30]]&& laurePosX+ laureWidth>= blocks[i][_0xcd54[40]]&& laurePosX+ laureWidth< blocks[i][_0xcd54[40]]+ blocks[i][_0xcd54[29]]&& (contactSide=  !0,laurePosX= blocks[i][_0xcd54[40]]- laureWidth,laureSpeedX= 0)};for(i= 0;i< blocks[_0xcd54[20]];i+= 1){laurePosXPrev>= blocks[i][_0xcd54[40]]+ blocks[i][_0xcd54[29]]&& laurePosY> blocks[i][_0xcd54[39]]&& laurePosY< blocks[i][_0xcd54[39]]+ blocks[i][_0xcd54[30]]&& laurePosX<= blocks[i][_0xcd54[40]]+ blocks[i][_0xcd54[29]]&& laurePosX> blocks[i][_0xcd54[40]]&& (contactSide=  !0,laurePosX= blocks[i][_0xcd54[40]]+ blocks[i][_0xcd54[29]],laureSpeedX= 0)};for(i= 0;i< blocks[_0xcd54[20]];i+= 1){laurePosXPrev+ laureWidth<= blocks[i][_0xcd54[40]]&& laurePosY> blocks[i][_0xcd54[39]]&& laurePosY< blocks[i][_0xcd54[39]]+ blocks[i][_0xcd54[30]]&& laurePosX+ laureWidth>= blocks[i][_0xcd54[40]]&& laurePosX+ laureWidth< blocks[i][_0xcd54[40]]+ blocks[i][_0xcd54[29]]&& (contactSide=  !0,laurePosX= blocks[i][_0xcd54[40]]- laureWidth,laureSpeedX= 0)}}function isFruit(){Math[_0xcd54[41]](laureCenterX,laureCenterY,fruitCenterX,fruitCenterY)< (laureWidth+ fruitWidth)/ 2&& (score+= 1,initialPos());(laurePosXPrev< fruitCenterX&& laurePosX> fruitCenterX|| laurePosXPrev> fruitCenterX&& laurePosX< fruitCenterX)&& Math[_0xcd54[42]](laurePosYPrev- fruitCenterY)< laureHeight/ 2&& Math[_0xcd54[42]](laurePosY- fruitCenterY)< laureHeight/ 2&& (score+= 1,initialPos())}function isBonusSpeed(){Math[_0xcd54[41]](laureCenterX,laureCenterY,bonusSpeedCenterX,bonusSpeedCenterY)< (laureWidth+ bonusSpeedWidth)/ 2&& (speedX+= 4,presenceBonusSpeed=  !1);(laurePosXPrev< bonusSpeedCenterX&& laurePosX> bonusSpeedCenterX|| laurePosXPrev> bonusSpeedCenterX&& laurePosX< bonusSpeedCenterX)&& Math[_0xcd54[42]](laurePosYPrev- bonusSpeedCenterY)< laureHeight/ 2&& Math[_0xcd54[42]](laurePosY- bonusSpeedCenterY)< laureHeight/ 2&& (speedX+= 4,presenceBonusSpeed=  !1)}function isBonusJump(){Math[_0xcd54[41]](laureCenterX,laureCenterY,bonusJumpCenterX,bonusJumpCenterY)< (laureWidth+ bonusJumpWidth)/ 2&& (jump+= 4,presenceBonusJump=  !1);(laurePosXPrev< bonusJumpCenterX&& laurePosX> bonusJumpCenterX|| laurePosXPrev> bonusJumpCenterX&& laurePosX< bonusJumpCenterX)&& Math[_0xcd54[42]](laurePosYPrev- bonusJumpCenterY)< laureHeight/ 2&& Math[_0xcd54[42]](laurePosY- bonusJumpCenterY)< laureHeight/ 2&& (jump+= 4,presenceBonusJump=  !1)}function drawLoseScreen(){colorRect(canvas[_0xcd54[29]]/ 2- 200,canvas[_0xcd54[30]]/ 4,400,185,_0xcd54[34]);0< score&& writeText(_0xcd54[43]+ rank+ _0xcd54[44]+ totalRank,canvas[_0xcd54[29]]/ 2,canvas[_0xcd54[30]]/ 4+ 50,_0xcd54[36],_0xcd54[45]);writeText(_0xcd54[46]+ score+ _0xcd54[47]+ minutes+ _0xcd54[48]+ seconds+ _0xcd54[49],canvas[_0xcd54[29]]/ 2,canvas[_0xcd54[30]]/ 4+ 75,_0xcd54[36],_0xcd54[45]);writeText(_0xcd54[50],canvas[_0xcd54[29]]/ 2,canvas[_0xcd54[30]]/ 4+ 130,_0xcd54[36],_0xcd54[45]);0== score?writeText(_0xcd54[51],canvas[_0xcd54[29]]/ 2,canvas[_0xcd54[30]]/ 4+ 100,_0xcd54[36],_0xcd54[45]):2>= score?writeText(_0xcd54[52],canvas[_0xcd54[29]]/ 2,canvas[_0xcd54[30]]/ 4+ 100,_0xcd54[36],_0xcd54[45]):3== score?writeText(_0xcd54[53],canvas[_0xcd54[29]]/ 2,canvas[_0xcd54[30]]/ 4+ 100,_0xcd54[36],_0xcd54[45]):5>= score?writeText(_0xcd54[54],canvas[_0xcd54[29]]/ 2,canvas[_0xcd54[30]]/ 4+ 100,_0xcd54[36],_0xcd54[45]):7>= score?writeText(_0xcd54[55],canvas[_0xcd54[29]]/ 2,canvas[_0xcd54[30]]/ 4+ 100,_0xcd54[36],_0xcd54[45]):9>= score?writeText(_0xcd54[56],canvas[_0xcd54[29]]/ 2,canvas[_0xcd54[30]]/ 4+ 100,_0xcd54[36],_0xcd54[45]):10== score?writeText(_0xcd54[57],canvas[_0xcd54[29]]/ 2,canvas[_0xcd54[30]]/ 4+ 100,_0xcd54[36],_0xcd54[45]):11== score?writeText(_0xcd54[58],canvas[_0xcd54[29]]/ 2,canvas[_0xcd54[30]]/ 4+ 100,_0xcd54[36],_0xcd54[45]):12== score?writeText(_0xcd54[59],canvas[_0xcd54[29]]/ 2,canvas[_0xcd54[30]]/ 4+ 100,_0xcd54[36],_0xcd54[45]):13== score?writeText(_0xcd54[60],canvas[_0xcd54[29]]/ 2,canvas[_0xcd54[30]]/ 4+ 100,_0xcd54[36],_0xcd54[45]):14== score?writeText(_0xcd54[61],canvas[_0xcd54[29]]/ 2,canvas[_0xcd54[30]]/ 4+ 100,_0xcd54[36],_0xcd54[45]):15== score?writeText(_0xcd54[62],canvas[_0xcd54[29]]/ 2,canvas[_0xcd54[30]]/ 4+ 100,_0xcd54[36],_0xcd54[45]):15< score&& writeText(_0xcd54[63],canvas[_0xcd54[29]]/ 2,canvas[_0xcd54[30]]/ 4+ 100,_0xcd54[36],_0xcd54[45])}function newScore(_0xd0f7x46,_0xd0f7x50,_0xd0f7x51,_0xd0f7x52,_0xd0f7x53){checkTotalRank();if(0!= totalRank&& 0!= _0xd0f7x50){for(i= 1;i<= totalRank;i+= 1){var _0xd0f7x54=Number(getData(_0xcd54[64],i,_0xcd54[65]));if(_0xd0f7x54< _0xd0f7x50){rank= i;break}else {if(_0xd0f7x54== _0xd0f7x50){var _0xd0f7x54=Number(getData(_0xcd54[64],i,_0xcd54[66])),_0xd0f7x55=Number(getData(_0xcd54[64],i,_0xcd54[67])),_0xd0f7x56=Number(getData(_0xcd54[64],i,_0xcd54[68]));if(_0xd0f7x51< _0xd0f7x54|| _0xd0f7x51== _0xd0f7x54&& _0xd0f7x52< _0xd0f7x55|| _0xd0f7x51== _0xd0f7x54&& _0xd0f7x52== _0xd0f7x55&& _0xd0f7x53< _0xd0f7x56){rank= i;break}}else {i== totalRank&& (rank= i+ 1)}}};for(i= 0;i<= totalRank- rank;i+= 1){var _0xd0f7x54=getData(_0xcd54[64],totalRank- i,_0xcd54[69]),_0xd0f7x55=getData(_0xcd54[64],totalRank- i,_0xcd54[65]),_0xd0f7x56=getData(_0xcd54[64],totalRank- i,_0xcd54[66]),_0xd0f7x57=getData(_0xcd54[64],totalRank- i,_0xcd54[67]),_0xd0f7x58=getData(_0xcd54[64],totalRank- i,_0xcd54[68]);writeData(totalRank- i+ 1,_0xd0f7x54,_0xd0f7x55,_0xd0f7x56,_0xd0f7x57,_0xd0f7x58)};_0xd0f7x54= _0xd0f7x52;_0xd0f7x55= _0xd0f7x53;10> _0xd0f7x52&& (_0xd0f7x54= _0xcd54[70]+ _0xd0f7x52);10> _0xd0f7x53&& (_0xd0f7x55= _0xcd54[70]+ _0xd0f7x53);writeData(rank,_0xd0f7x46,_0xd0f7x50,_0xd0f7x51,_0xd0f7x54,_0xd0f7x55);highScoreUpdate()}}function highScoreUpdate(){for(i= 1;10>= i;i+= 1){var _0xd0f7x46=getData(_0xcd54[64],i,_0xcd54[69]),_0xd0f7x50=getData(_0xcd54[64],i,_0xcd54[65]),_0xd0f7x51=getData(_0xcd54[64],i,_0xcd54[66]),_0xd0f7x52=getData(_0xcd54[64],i,_0xcd54[67]),_0xd0f7x53=getData(_0xcd54[64],i,_0xcd54[68]),_0xd0f7x54=_0xcd54[71]+ i+ _0xcd54[72],_0xd0f7x55=_0xcd54[71]+ i+ _0xcd54[73],_0xd0f7x56=_0xcd54[71]+ i+ _0xcd54[74],_0xd0f7x51=_0xd0f7x51+ _0xcd54[75]+ _0xd0f7x52+ _0xcd54[76]+ _0xd0f7x53+ _0xcd54[77];document[_0xcd54[11]](_0xcd54[71]+ i+ _0xcd54[79])[_0xcd54[78]]= i;document[_0xcd54[11]](_0xd0f7x54)[_0xcd54[78]]= _0xd0f7x46;document[_0xcd54[11]](_0xd0f7x55)[_0xcd54[78]]= _0xd0f7x50;document[_0xcd54[11]](_0xd0f7x56)[_0xcd54[78]]= _0xd0f7x51}}function checkTotalRank(){firebase[_0xcd54[84]]()[_0xcd54[83]]()[_0xcd54[82]](_0xcd54[64])[_0xcd54[81]](_0xcd54[23],function(_0xd0f7x46){totalRank= _0xd0f7x46[_0xcd54[80]]()})}function getData(_0xd0f7x46,_0xd0f7x50,_0xd0f7x51){var _0xd0f7x52=0;firebase[_0xcd54[84]]()[_0xcd54[83]](_0xd0f7x46+ _0xcd54[44]+ _0xd0f7x50+ _0xcd54[44]+ _0xd0f7x51)[_0xcd54[81]](_0xcd54[23],function(_0xd0f7x46){_0xd0f7x52= _0xd0f7x46[_0xcd54[85]]()});return _0xd0f7x52}function writeData(_0xd0f7x46,_0xd0f7x50,_0xd0f7x51,_0xd0f7x52,_0xd0f7x53,_0xd0f7x54){firebase[_0xcd54[84]]()[_0xcd54[83]](_0xcd54[87]+ _0xd0f7x46)[_0xcd54[86]]({username:_0xd0f7x50,score:_0xd0f7x51,minutes:_0xd0f7x52,seconds:_0xd0f7x53,miliseconds:_0xd0f7x54})}function changeUser(){user= document[_0xcd54[11]](_0xcd54[24])[_0xcd54[23]]}Math[_0xcd54[41]]= function(_0xd0f7x46,_0xd0f7x50,_0xd0f7x51,_0xd0f7x52){_0xd0f7x46= _0xd0f7x51- _0xd0f7x46;_0xd0f7x50= _0xd0f7x52- _0xd0f7x50;return Math[_0xcd54[88]](_0xd0f7x46* _0xd0f7x46+ _0xd0f7x50* _0xd0f7x50)};function colorRect(_0xd0f7x46,_0xd0f7x50,_0xd0f7x51,_0xd0f7x52,_0xd0f7x53){ctx[_0xcd54[89]]= _0xd0f7x53;ctx[_0xcd54[90]](_0xd0f7x46,_0xd0f7x50,_0xd0f7x51,_0xd0f7x52)}function writeText(_0xd0f7x46,_0xd0f7x50,_0xd0f7x51,_0xd0f7x52,_0xd0f7x53){ctx[_0xcd54[89]]= _0xd0f7x53;ctx[_0xcd54[91]]= _0xd0f7x52;ctx[_0xcd54[92]](_0xd0f7x46,_0xd0f7x50,_0xd0f7x51)}function writeTime(){var _0xd0f7x46=minutes,_0xd0f7x50=seconds;10> minutes&& (_0xd0f7x46= _0xcd54[70]+ minutes);10> seconds&& (_0xd0f7x50= _0xcd54[70]+ seconds);writeText(_0xd0f7x46+ _0xcd54[93]+ _0xd0f7x50,canvas[_0xcd54[29]]- 50,50,_0xcd54[94],_0xcd54[34])}function block(_0xd0f7x46,_0xd0f7x50,_0xd0f7x51,_0xd0f7x52,_0xd0f7x53){this[_0xcd54[40]]= _0xd0f7x46;this[_0xcd54[39]]= _0xd0f7x50;this[_0xcd54[29]]= _0xd0f7x51;this[_0xcd54[30]]= _0xd0f7x52;this[_0xcd54[95]]= _0xd0f7x53;this[_0xcd54[37]]= function(){colorRect(this[_0xcd54[40]],this[_0xcd54[39]],this[_0xcd54[29]],this[_0xcd54[30]],this[_0xcd54[95]])}}function generateBlocks(){for(i= 1;i< numberOfBlocks;i+= 1){blocks[i]=  new block(Math[_0xcd54[96]]()* canvas[_0xcd54[29]]* 0.9,25* Math[_0xcd54[28]](Math[_0xcd54[96]]()* canvas[_0xcd54[30]]* 0.7/ 25)+ 100,125* Math[_0xcd54[96]]()+ 25,10,_0xcd54[97])};do{fruit= Math[_0xcd54[28]](Math[_0xcd54[96]]()* numberOfBlocks)}while(1> fruit);;fruitPosX= blocks[fruit][_0xcd54[40]]+ blocks[fruit][_0xcd54[29]]/ 2- fruitWidth/ 2;fruitPosY= blocks[fruit][_0xcd54[39]]- 12;fruitCenterX= fruitPosX+ fruitWidth/ 2;fruitCenterY= fruitPosY+ fruitHeight/ 2;do{bonus= Math[_0xcd54[28]](Math[_0xcd54[96]]()* numberOfBlocks)}while(1> bonus|| bonus== fruit);;0== score&& (bonus= void(0));bonusSpeedCount> 2* bonusJumpCount&& (bonus= 3);bonusJumpCount> 2* bonusSpeedCount&& (bonus= 4);0== bonus% 2?(presenceBonusSpeed=  !0,bonusSpeedCount+= 1,bonusSpeedPosX= blocks[bonus][_0xcd54[40]]+ blocks[bonus][_0xcd54[29]]/ 2- bonusSpeedWidth/ 2,bonusSpeedPosY= blocks[bonus][_0xcd54[39]]- 12,bonusSpeedCenterX= bonusSpeedPosX+ bonusSpeedWidth/ 2,bonusSpeedCenterY= bonusSpeedPosY+ bonusSpeedHeight/ 2):presenceBonusSpeed=  !1;0== (bonus+ 1)% 2?(presenceBonusJump=  !0,bonusJumpCount+= 1,bonusJumpPosX= blocks[bonus][_0xcd54[40]]+ blocks[bonus][_0xcd54[29]]/ 2- bonusJumpWidth/ 2,bonusJumpPosY= blocks[bonus][_0xcd54[39]]- 12,bonusJumpCenterX= bonusJumpPosX+ bonusJumpWidth/ 2,bonusJumpCenterY= bonusJumpPosY+ bonusJumpHeight/ 2):presenceBonusJump=  !1}function initialPos(){laurePosX= 300- laureWidth/ 2;laurePosXPrev= 300;laurePosYPrev= laurePosY= 475;laureSpeedY= laureSpeedX= 0;blocks[0]= floor;generateBlocks()}function reset(){floor=  new block(100,canvas[_0xcd54[30]]- 50,400,200,_0xcd54[97]);bonusSpeedCount= bonusJumpCount= score= time= 0;speedX= initialSpeedX;jump= initialJump;initialPos()}function debug(){}
 </script>
-
-
 </body>
 </html>
